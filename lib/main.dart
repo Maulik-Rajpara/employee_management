@@ -3,6 +3,7 @@ import 'package:employee_management/core/utils/strings.dart';
 import 'package:employee_management/features/employee/presentation/bloc/employee_bloc.dart';
 import 'package:employee_management/route/route_configuration.dart';
 import 'package:employee_management/services/hive_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,18 +35,32 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: false,
-      child: MaterialApp(
-        title: Strings.appName, debugShowCheckedModeBanner: false,
-        onGenerateRoute: RouteConfiguration.generateRoute,
-        theme: ThemeData(
-          textTheme: GoogleFonts.robotoTextTheme(textTheme).copyWith(
-            bodyMedium: GoogleFonts.roboto(textStyle: textTheme.bodyMedium),
-          ),
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
-          useMaterial3: true,
-        ),
-        home: const SplashScreen(),
-      ),
-    );
+      builder: (context, child) {
+        return MaterialApp(
+          title: Strings.appName,
+          debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              textTheme: GoogleFonts.robotoTextTheme(textTheme).copyWith(
+                bodyMedium: GoogleFonts.roboto(textStyle: textTheme.bodyMedium),
+              ),
+              colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+              useMaterial3: true,
+            ),
+          onGenerateRoute: RouteConfiguration.generateRoute,
+          home: kIsWeb
+              ? ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 375.w,  // Mobile width boundary (web only)
+                minHeight: 812.h, // Mobile height boundary (web only)
+            ),
+            child: child,
+          )
+          : child,  // No constraint applied for non-web platforms
+        );
+      },
+      child:  SplashScreen(),
+
+  );
+
   }
 }

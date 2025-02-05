@@ -14,10 +14,12 @@ class BuildEmployeeItem extends StatelessWidget {
     super.key,
     required this.context,
     required this.employee,
+    required this.onDismissed,
   });
 
   final BuildContext context;
   final EmployeeModel employee;
+  final Function(String employeeId) onDismissed;  // Callback to parent
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +37,8 @@ class BuildEmployeeItem extends StatelessWidget {
         background: SlideLeftBackground(),
         direction: DismissDirection.endToStart,
         onDismissed: (direction) {
-          context.read<EmployeeBloc>().add(DeleteEmployee(employee.id));
-          Future.delayed(Duration(milliseconds: 100), () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("${employee.name} has been deleted"),
-                action: SnackBarAction(
-                  label: "Undo",
-                  onPressed: () {
-                    context.read<EmployeeBloc>().add(RestoreEmployee());
-                  },
-                ),
-              ),
-            );
-          });
+          onDismissed(employee.id);
+
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
