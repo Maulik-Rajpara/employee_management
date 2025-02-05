@@ -55,9 +55,9 @@ dependencies:
    flutter run
    ```
 ## Flutter WEB
-```bash
+   ```bash
    https://maulik-emp-management.netlify.app/
-```
+   ```
 
 ## Architecture
 
