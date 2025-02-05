@@ -64,7 +64,24 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
                     ),
                   ),
                 ...currentEmployees.map((employee) {
-                  return BuildEmployeeItem(context: context, employee: employee);
+                  return BuildEmployeeItem(context: context, employee: employee, onDismissed: (String employeeId) {
+                    context.read<EmployeeBloc>().add(DeleteEmployee(employee.id));
+                    Future.delayed(Duration(milliseconds: 100), () async{
+                      if(context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("${employee.name} has been deleted"),
+                            action: SnackBarAction(
+                              label: "Undo",
+                              onPressed: () {
+                                context.read<EmployeeBloc>().add(RestoreEmployee());
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    });
+                  },);
                 }),
 
                 // Previous Employees Section
@@ -82,7 +99,24 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
                     ),
                   ),
                 ...preEmployees.map((employee) {
-                  return BuildEmployeeItem(context: context, employee: employee);
+                  return BuildEmployeeItem(context: context, employee: employee, onDismissed: (String employeeId) {
+                    context.read<EmployeeBloc>().add(DeleteEmployee(employee.id));
+                    Future.delayed(Duration(milliseconds: 100), () async{
+                      if(context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("${employee.name} has been deleted"),
+                            action: SnackBarAction(
+                              label: "Undo",
+                              onPressed: () {
+                                context.read<EmployeeBloc>().add(RestoreEmployee());
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    });
+                  },);
                 }),
               ],
             )
